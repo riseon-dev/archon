@@ -15,7 +15,4 @@ declare_id!("2DHHZStK2bAjGEpbopuZsdaiJtxCCkzacUbeTQLmWrbh");
 pub mod copy_trading {
     use super::*;
 
-    pub fn initialize(ctx: Context<Initialize>) -> Result<()> {
-        initialize::handler(ctx)
-    }
 }
