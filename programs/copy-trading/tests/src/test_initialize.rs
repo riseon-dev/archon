@@ -7,22 +7,32 @@ use anchor_client::{
     Client, Cluster,
 };
 
+// #[test]
+// fn test_initialize() {
+//     let program_id = "2DHHZStK2bAjGEpbopuZsdaiJtxCCkzacUbeTQLmWrbh";
+//     let anchor_wallet = std::env::var("ANCHOR_WALLET").unwrap();
+//     let payer = read_keypair_file(&anchor_wallet).unwrap();
+// 
+//     let client = Client::new_with_options(Cluster::Localnet, &payer, CommitmentConfig::confirmed());
+//     let program_id = Pubkey::from_str(program_id).unwrap();
+//     let program = client.program(program_id).unwrap();
+// 
+//     let tx = program
+//         .request()
+//         .accounts(copy_trading::accounts::Initialize {})
+//         .args(copy_trading::instruction::Initialize {})
+//         .send()
+//         .expect("");
+// 
+//     println!("Your transaction signature {}", tx);
+// }
+
 #[test]
-fn test_initialize() {
-    let program_id = "2DHHZStK2bAjGEpbopuZsdaiJtxCCkzacUbeTQLmWrbh";
-    let anchor_wallet = std::env::var("ANCHOR_WALLET").unwrap();
-    let payer = read_keypair_file(&anchor_wallet).unwrap();
-
-    let client = Client::new_with_options(Cluster::Localnet, &payer, CommitmentConfig::confirmed());
-    let program_id = Pubkey::from_str(program_id).unwrap();
-    let program = client.program(program_id).unwrap();
-
-    let tx = program
-        .request()
-        .accounts(copy_trading::accounts::Initialize {})
-        .args(copy_trading::instruction::Initialize {})
-        .send()
-        .expect("");
-
-    println!("Your transaction signature {}", tx);
+fn test_it_should_allow_operators_to_create_vaults() {
+    
 }
+
+// #[test]
+// fn test_only_operators_should_be_able_swap_on_vault() {
+//     
+// }
