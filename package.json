@@ -3,7 +3,7 @@
   "workspaces": [
     "programs/**/*",
     "services/**/*",
-    "crates/**/*"
+    "libraries/**/*"
   ],
   "packageManager": "yarn@4.7.0"
 }
