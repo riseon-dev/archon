@@ -17,8 +17,9 @@ pub mod copy_trading {
 
     pub fn create_vault(
         ctx: Context<CreateVault>,
+        params: InitTokenParams,
         uid: u8,
     ) -> Result<()> {
-        ctx.accounts.create_vault(&uid, &ctx.bumps)
+        instructions::create_vault(ctx, params, uid)
     }
 }
