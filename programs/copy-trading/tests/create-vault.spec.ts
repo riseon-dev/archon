@@ -1,31 +1,57 @@
-import { CopyTrading } from "../target/types/copy_trading";
+import { LiteSVM, TransactionMetadata } from "litesvm";
+import {
+  Keypair,
+  LAMPORTS_PER_SOL,
+  PublicKey,
+  Transaction,
+  TransactionInstruction,
+} from "@solana/web3.js";
+import * as path from "path";
 
-
+const COPY_TRADING_PROGRAM = path.join(__dirname, "../target/deploy/copy_trading.so");
 
 describe('Create Vault Instruction', () => {
   it('should create vault', async () => {
-    // // Configure the client to use the local cluster.
-    // const provider = anchor.AnchorProvider.env();
-    // anchor.setProvider(provider);
-    //
-    // const program = anchor.workspace.CopyTrading as Program<CopyTrading>;
-    //
-    // // Generate a new keypair for the vault
-    // const operatorKeyPair = anchor.web3.Keypair.generate();
-    // // Generate a new keypair for the vault
-    // const vaultKeyPair = anchor.web3.Keypair.generate();
-    //
-    // // Create a new vault
-    // const tx = await program.methods.createVault(1)
-    //   .accounts({
-    //     operator: operatorKeyPair.publicKey,
-    //     mint: anchor.web3.PublicKey.default,
-    //     tokenProgram: anchor.utils.token.TOKEN_PROGRAM_ID,
-    //   })
-    //   .signers([operatorKeyPair])
-    //   .rpc();
-    //
-    // console.log("Transaction signature", tx);
+
+    // init litesvm
+    const svm = new LiteSVM();
+
+    // assign program to a program id and load it
+    const programId = PublicKey.unique();
+    svm.addProgramFromFile(programId, COPY_TRADING_PROGRAM);
+
+    // create operator and airdrop some SOL
+    const operator = new Keypair();
+    svm.airdrop(operator.publicKey, BigInt(LAMPORTS_PER_SOL));
+
+
+    const blockhash = svm.latestBlockhash();
+    const ixs = [
+      new TransactionInstruction({
+        programId,
+        keys: [
+          { pubkey: PublicKey.unique(), isSigner: false, isWritable: false },
+        ],
+      }),
+    ];
+    const tx = new Transaction();
+    tx.recentBlockhash = blockhash;
+    tx.add(...ixs);
+    tx.sign(operator);
+
+    // let's sim it first
+    const simRes = svm.simulateTransaction(tx);
+    console.log('simulations response', simRes);
+
+    const sendRes = svm.sendTransaction(tx);
+    console.log('send response', sendRes);
+
+    if (sendRes instanceof TransactionMetadata) {
+      expect(simRes.meta().logs()).toEqual(sendRes.logs());
+      expect(sendRes.logs()[1]).toBe("Program log: static string");
+    } else {
+      throw new Error("Unexpected tx failure");
+    }
   });
 
   it.todo('should close vault');
