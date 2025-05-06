@@ -1,12 +1,10 @@
-import * as anchor from "@coral-xyz/anchor";
-import { Program } from "@coral-xyz/anchor";
 import { CopyTrading } from "../target/types/copy_trading";
 
 describe("copy-trading", () => {
   // Configure the client to use the local cluster.
-  anchor.setProvider(anchor.AnchorProvider.env());
-
-  const program = anchor.workspace.CopyTrading as Program<CopyTrading>;
+  // anchor.setProvider(anchor.AnchorProvider.env());
+  //
+  // const program = anchor.workspace.CopyTrading as Program<CopyTrading>;
 
   it("Is initialized!", async () => {
     // Add your test here.

@@ -15,4 +15,10 @@ declare_id!("2DHHZStK2bAjGEpbopuZsdaiJtxCCkzacUbeTQLmWrbh");
 pub mod copy_trading {
     use super::*;
 
+    pub fn create_vault(
+        ctx: Context<CreateVault>,
+        uid: u8,
+    ) -> Result<()> {
+        ctx.accounts.create_vault(&uid, &ctx.bumps)
+    }
 }
