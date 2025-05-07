@@ -6,4 +6,3 @@ pub use investor_claim::*;
 
 pub mod trading_position;
 pub use trading_position::*;
-
