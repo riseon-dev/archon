@@ -1,9 +1,3 @@
 {
-  "name": "archon",
-  "workspaces": [
-    "programs/**/*",
-    "services/**/*",
-    "libraries/**/*"
-  ],
-  "packageManager": "yarn@4.7.0"
+  "name": "archon"
 }
