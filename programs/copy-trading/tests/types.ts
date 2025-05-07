@@ -21,7 +21,10 @@ import * as borsh from '@coral-xyz/borsh';
 //   }
 // }
 
-export const createVaultSchema = borsh.struct([
-  borsh.u8('decimals'),
-  borsh.u8('uid'),
-]);
+// https://solana.com/developers/courses/native-onchain-development/serialize-instruction-data-frontend
+
+//
+// export const createVaultSchema = borsh.struct([
+//   borsh.u8('decimals'),
+//   borsh.u8('uid'),
+// ]);

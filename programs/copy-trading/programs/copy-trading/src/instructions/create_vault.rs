@@ -1,8 +1,8 @@
 use anchor_lang::prelude::*;
-use anchor_lang::{prelude::*, AnchorDeserialize, AnchorSerialize};
+use anchor_lang::{AnchorDeserialize, AnchorSerialize};
 use anchor_spl::associated_token::AssociatedToken;
-use anchor_spl::token::{initialize_mint, InitializeMint, Mint, Token, TokenAccount};
-use anchor_spl::token_interface::TokenInterface;
+use anchor_spl::token_2022::{initialize_mint2, mint_to, InitializeMint2, MintTo, Token2022};
+use anchor_spl::token_interface::{Mint, TokenInterface};
 
 pub use crate::constants::*;
 use crate::vault::Vault;
@@ -30,12 +30,9 @@ pub struct CreateVault<'info> {
       mint::authority = vault,
       mint::freeze_authority = vault,
     )]
-    pub mint: Account<'info, Mint>,
-
+    pub mint: InterfaceAccount<'info, Mint>,
+    pub token_program: Program<'info, Token2022>,
     pub system_program: Program<'info, System>,
-    pub token_program: Program<'info, Token>,
-    pub associated_token_program: Program<'info, AssociatedToken>,
-    pub rent: Sysvar<'info, Rent>,
 }
 
 pub fn create_vault(ctx: Context<CreateVault>) -> Result<()> {
@@ -44,23 +41,25 @@ pub fn create_vault(ctx: Context<CreateVault>) -> Result<()> {
     let decimals: u8 = 6; // hard coded for now
 
     let operator_binding = ctx.accounts.operator.key();
-    let vault_seeds = &[b"vault", operator_binding.as_ref()];
-    let signer = [&vault_seeds[..]];
+    let vault_seeds = &[b"vault", operator_binding.as_ref(), &[ctx.bumps.vault]];
+    let vault_signer = [&vault_seeds[..]];
+    
+    let vault = &mut ctx.accounts.vault;
 
     // Initialize the mint
-    let cpi_program = ctx.accounts.token_program.to_account_info();
-    let cpi_accounts = InitializeMint {
+    let mint: InitializeMint2 = InitializeMint2 {
         mint: ctx.accounts.mint.to_account_info(),
-        rent: ctx.accounts.rent.to_account_info(),
     };
-
-    let cpi_ctx = CpiContext::new_with_signer(cpi_program, cpi_accounts, &signer);
-    initialize_mint(
-        cpi_ctx,
-        decimals,
-        &ctx.accounts.vault.key(),
-        Some(&ctx.accounts.vault.key()),
-    )?;
+    
+    let ctx_mint = CpiContext::new_with_signer(
+        ctx.accounts.token_program.to_account_info(),
+        mint,
+        &vault_signer,
+    );
+    
+    initialize_mint2(ctx_mint, decimals, &ctx.accounts.vault.key(), Some(&ctx.accounts.vault
+        .key()))?;
+    
 
     // Initialize the vault account
     ctx.accounts.vault.set_inner(Vault {
@@ -70,7 +69,8 @@ pub fn create_vault(ctx: Context<CreateVault>) -> Result<()> {
         sol_in_trade: 0,
         token_price: 0,
         mint: ctx.accounts.mint.key(),
-        bump: ctx.bumps.vault,
+        vault_bump: ctx.bumps.vault,
+        mint_bump: ctx.bumps.mint,
     });
 
     Ok(())

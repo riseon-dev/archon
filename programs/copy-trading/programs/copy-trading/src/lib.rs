@@ -9,7 +9,7 @@ pub use constants::*;
 pub use instructions::*;
 pub use state::*;
 
-declare_id!("2DHHZStK2bAjGEpbopuZsdaiJtxCCkzacUbeTQLmWrbh");
+declare_id!("8NMw7pjvKbBe3bNRmxtKidth4LcZT8249Eo2LxVbRvt9");
 
 #[program]
 pub mod copy_trading {
