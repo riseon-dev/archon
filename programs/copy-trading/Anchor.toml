@@ -16,4 +16,4 @@ wallet = "~/.config/solana/id.json"
 
 [scripts]
 clean = "cargo clean"
-test = "yarn run tests"
+test = "pnpm run tests"
