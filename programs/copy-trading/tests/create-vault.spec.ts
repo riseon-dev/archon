@@ -6,13 +6,13 @@ import {
   Transaction,
   TransactionInstruction,
 } from '@solana/web3.js';
-import {FailedTransactionMetadata, LiteSVM, TransactionMetadata } from 'litesvm';
-import * as path from 'path';
 import {
-  TOKEN_PROGRAM_ID,
-  TOKEN_2022_PROGRAM_ID,
-  ASSOCIATED_TOKEN_PROGRAM_ID,
-} from '@solana/spl-token';
+  FailedTransactionMetadata,
+  LiteSVM,
+  TransactionMetadata,
+} from 'litesvm';
+import * as path from 'path';
+import { TOKEN_2022_PROGRAM_ID } from '@solana/spl-token';
 
 const COPY_TRADING_PROGRAM = path.join(
   __dirname,
@@ -23,6 +23,9 @@ const SYSVAR_RENT_PUBKEY = new PublicKey(
 );
 const programId = new PublicKey('8NMw7pjvKbBe3bNRmxtKidth4LcZT8249Eo2LxVbRvt9'); // get from lib.rs
 
+const CREATE_VAULT_DISCRIMINATOR = Buffer.from([
+  29, 237, 247, 208, 193, 82, 54, 135,
+]);
 
 describe('Create Vault Instruction', () => {
   it('should create vault', async () => {
@@ -47,8 +50,6 @@ describe('Create Vault Instruction', () => {
       programId,
     );
 
-    // transaction
-
     const blockhash = svm.latestBlockhash();
     const ixs = [
       new TransactionInstruction({
@@ -57,15 +58,14 @@ describe('Create Vault Instruction', () => {
           { pubkey: operator.publicKey, isSigner: true, isWritable: true },
           { pubkey: vaultPubkey, isSigner: false, isWritable: true },
           { pubkey: mintPubkey, isSigner: false, isWritable: true },
-
+          { pubkey: TOKEN_2022_PROGRAM_ID, isSigner: false, isWritable: false },
           {
             pubkey: SystemProgram.programId,
             isSigner: false,
             isWritable: false,
           },
-          { pubkey: TOKEN_2022_PROGRAM_ID, isSigner: false, isWritable: false },
         ],
-        data: Buffer.alloc(8),
+        data: CREATE_VAULT_DISCRIMINATOR,
       }),
     ];
 
@@ -75,15 +75,15 @@ describe('Create Vault Instruction', () => {
     tx.sign(operator);
     console.log('tx', tx);
 
-    console.log("Operator:", operator.publicKey.toString());
-    console.log("Vault:", vaultPubkey.toString());
-    console.log("Mint:", mintPubkey.toString());
+    console.log('Operator:', operator.publicKey.toString());
+    console.log('Vault:', vaultPubkey.toString());
+    console.log('Mint:', mintPubkey.toString());
 
     // let's sim it first
     const simRes = svm.simulateTransaction(tx);
     console.log('simulations response', simRes);
     if (simRes instanceof Error) {
-      console.error("Simulation error details:", simRes);
+      console.error('Simulation error details:', simRes);
     }
 
     const sendRes = svm.sendTransaction(tx);
@@ -92,18 +92,17 @@ describe('Create Vault Instruction', () => {
     if (sendRes instanceof TransactionMetadata) {
       console.log('Tx Successful!', sendRes.logs());
       expect(simRes.meta().logs()).toEqual(sendRes.logs());
-      expect(sendRes.logs()[1]).toBe("Program log: static string");
+      expect(sendRes.logs()[1]).toBe('Program log: Instruction: CreateVault');
     } else {
       if (sendRes instanceof FailedTransactionMetadata) {
         console.log(sendRes.toString());
         console.log(sendRes.err().toString());
         console.log(sendRes.meta().logs());
-        throw new Error("Transaction failed");
+        throw new Error('Transaction failed');
       } else {
-        throw new Error("Unexpected tx failure");
+        throw new Error('Unexpected tx failure');
       }
     }
-    //
   });
 
   it.todo('should close vault');
