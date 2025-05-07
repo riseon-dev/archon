@@ -18,9 +18,7 @@ const COPY_TRADING_PROGRAM = path.join(
   __dirname,
   '../target/deploy/copy_trading.so',
 );
-const SYSVAR_RENT_PUBKEY = new PublicKey(
-  'SysvarRent111111111111111111111111111111111',
-);
+
 const programId = new PublicKey('8NMw7pjvKbBe3bNRmxtKidth4LcZT8249Eo2LxVbRvt9'); // get from lib.rs
 
 const CREATE_VAULT_DISCRIMINATOR = Buffer.from([
