@@ -15,11 +15,7 @@ declare_id!("2DHHZStK2bAjGEpbopuZsdaiJtxCCkzacUbeTQLmWrbh");
 pub mod copy_trading {
     use super::*;
 
-    pub fn create_vault(
-        ctx: Context<CreateVault>,
-        params: InitTokenParams,
-        uid: u8,
-    ) -> Result<()> {
-        instructions::create_vault(ctx, params, uid)
+    pub fn create_vault(ctx: Context<CreateVault>) -> Result<()> {
+        instructions::create_vault(ctx)
     }
 }

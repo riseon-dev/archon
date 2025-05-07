@@ -2,16 +2,20 @@
   "license": "ISC",
   "scripts": {
     "tests": "jest -i",
-    "lint:fix": "prettier */*.js \"*/**/*{.js,.ts}\" -w",
-    "lint": "prettier */*.js \"*/**/*{.js,.ts}\" --check"
+    "lint:fix": "prettier \"*/**/*{.js,.ts}\" -w",
+    "lint": "prettier \"*/**/*{.js,.ts}\" --check"
   },
   "dependencies": {
+    "@coral-xyz/anchor": "^0.31.1",
+    "@coral-xyz/borsh": "^0.31.1",
+    "@dao-xyz/borsh": "^5.2.3",
     "@solana/spl-token": "^0.4.13",
+    "@solana/spl-token-metadata": "^0.1.6",
     "@solana/web3.js": "1",
     "bs58": "^6.0.0"
   },
   "devDependencies": {
-    "@types/bn.js": "^5.1.0",
+    "@types/bn.js": "^5.1.6",
     "@types/bs58": "^5.0.0",
     "@types/jest": "^29.5.14",
     "@types/node": "^22.15.3",
