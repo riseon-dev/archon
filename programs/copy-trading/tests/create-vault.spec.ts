@@ -23,7 +23,7 @@ const programId = new PublicKey('8NMw7pjvKbBe3bNRmxtKidth4LcZT8249Eo2LxVbRvt9');
 
 const CREATE_VAULT_DISCRIMINATOR = Buffer.from([
   29, 237, 247, 208, 193, 82, 54, 135,
-]);
+]); // TODO load this from IDL file
 
 describe('Create Vault Instruction', () => {
   it('should create vault', async () => {
