@@ -13,17 +13,13 @@ import {
 } from 'litesvm';
 import * as path from 'path';
 import { TOKEN_2022_PROGRAM_ID } from '@solana/spl-token';
+import copyTradingVaultIdl from '../target/idl/copy_trading.json';
+import {CREATE_VAULT_DISCRIMINATOR, PROGRAM_ID} from "./helpers";
 
 const COPY_TRADING_PROGRAM = path.join(
   __dirname,
   '../target/deploy/copy_trading.so',
 );
-
-const programId = new PublicKey('8NMw7pjvKbBe3bNRmxtKidth4LcZT8249Eo2LxVbRvt9'); // get from lib.rs
-
-const CREATE_VAULT_DISCRIMINATOR = Buffer.from([
-  29, 237, 247, 208, 193, 82, 54, 135,
-]); // TODO load this from IDL file
 
 describe('Create Vault Instruction', () => {
   it('should create vault', async () => {
@@ -31,7 +27,7 @@ describe('Create Vault Instruction', () => {
     const svm = new LiteSVM().withSplPrograms().withBuiltins();
 
     // assign program to a program id and load it
-    svm.addProgramFromFile(programId, COPY_TRADING_PROGRAM);
+    svm.addProgramFromFile(PROGRAM_ID, COPY_TRADING_PROGRAM);
 
     // create operator and airdrop some SOL
     const operator = new Keypair();
@@ -40,18 +36,18 @@ describe('Create Vault Instruction', () => {
     // create vault pubkey
     const [vaultPubkey, vaultBump] = PublicKey.findProgramAddressSync(
       [Buffer.from('vault'), operator.publicKey.toBuffer()],
-      programId,
+      PROGRAM_ID,
     );
 
     const [mintPubkey, mintBump] = PublicKey.findProgramAddressSync(
       [Buffer.from(`mint`), vaultPubkey.toBuffer()],
-      programId,
+      PROGRAM_ID,
     );
 
     const blockhash = svm.latestBlockhash();
     const ixs = [
       new TransactionInstruction({
-        programId,
+        programId: PROGRAM_ID,
         keys: [
           { pubkey: operator.publicKey, isSigner: true, isWritable: true },
           { pubkey: vaultPubkey, isSigner: false, isWritable: true },
@@ -71,26 +67,20 @@ describe('Create Vault Instruction', () => {
     tx.recentBlockhash = blockhash;
     tx.add(...ixs);
     tx.sign(operator);
-    console.log('tx', tx);
-
-    console.log('Operator:', operator.publicKey.toString());
-    console.log('Vault:', vaultPubkey.toString());
-    console.log('Mint:', mintPubkey.toString());
 
     // let's sim it first
     const simRes = svm.simulateTransaction(tx);
-    console.log('simulations response', simRes);
     if (simRes instanceof Error) {
       console.error('Simulation error details:', simRes);
     }
 
     const sendRes = svm.sendTransaction(tx);
-    console.log('send response', sendRes);
 
     if (sendRes instanceof TransactionMetadata) {
-      console.log('Tx Successful!', sendRes.logs());
       expect(simRes.meta().logs()).toEqual(sendRes.logs());
       expect(sendRes.logs()[1]).toBe('Program log: Instruction: CreateVault');
+      const message = 'Program 8NMw7pjvKbBe3bNRmxtKidth4LcZT8249Eo2LxVbRvt9 success';
+      expect(sendRes.logs()[sendRes.logs().length - 1]).toBe(message);
     } else {
       if (sendRes instanceof FailedTransactionMetadata) {
         console.log(sendRes.toString());
@@ -103,9 +93,9 @@ describe('Create Vault Instruction', () => {
     }
   });
 
+  it.todo('should not allow closing of vault by non-operator');
+
+  it.todo('should not allow closing vault if there are deposits');
+
   it.todo('should close vault');
-
-  it.todo('should throw error (of type?) if vault uid already exists');
-
-  it.todo('each vault should have its own token mint');
 });
