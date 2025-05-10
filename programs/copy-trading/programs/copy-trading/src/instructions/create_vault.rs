@@ -1,6 +1,6 @@
 use anchor_lang::prelude::*;
-use anchor_spl::token_2022::{Token2022};
-use anchor_spl::token_interface::{Mint,};
+use anchor_spl::token_2022::Token2022;
+use anchor_spl::token_interface::Mint;
 
 pub use crate::constants::*;
 use crate::vault::Vault;
@@ -34,9 +34,11 @@ pub struct CreateVault<'info> {
 }
 
 pub fn create_vault(ctx: Context<CreateVault>) -> Result<()> {
-    msg!("Creating vault");
-    msg!("Vault for operator {}", ctx.accounts.operator.key());
-    msg!("Vault PDA {}", ctx.accounts.vault.key());
+    msg!(
+        "Creating vault for operator {} with PDA {}",
+        ctx.accounts.operator.key(),
+        ctx.accounts.vault.key()
+    );
 
     // Initialize the vault account
     ctx.accounts.vault.set_inner(Vault {
