@@ -8,26 +8,19 @@ import {
 } from '@solana/web3.js';
 import {
   FailedTransactionMetadata,
-  LiteSVM,
   TransactionMetadata,
 } from 'litesvm';
-import * as path from 'path';
 import { TOKEN_2022_PROGRAM_ID } from '@solana/spl-token';
-import copyTradingVaultIdl from '../target/idl/copy_trading.json';
-import {CREATE_VAULT_DISCRIMINATOR, PROGRAM_ID} from "./helpers";
-
-const COPY_TRADING_PROGRAM = path.join(
-  __dirname,
-  '../target/deploy/copy_trading.so',
-);
+import {
+  CREATE_VAULT_DISCRIMINATOR,
+  createAndSignTransaction,
+  createLiteSVMInstance,
+  PROGRAM_ID,
+} from './helpers';
 
 describe('Create Vault Instruction', () => {
   it('should create vault', async () => {
-    // init litesvm
-    const svm = new LiteSVM().withSplPrograms().withBuiltins();
-
-    // assign program to a program id and load it
-    svm.addProgramFromFile(PROGRAM_ID, COPY_TRADING_PROGRAM);
+    const svm = createLiteSVMInstance();
 
     // create operator and airdrop some SOL
     const operator = new Keypair();
@@ -44,7 +37,6 @@ describe('Create Vault Instruction', () => {
       PROGRAM_ID,
     );
 
-    const blockhash = svm.latestBlockhash();
     const ixs = [
       new TransactionInstruction({
         programId: PROGRAM_ID,
@@ -63,10 +55,7 @@ describe('Create Vault Instruction', () => {
       }),
     ];
 
-    const tx = new Transaction();
-    tx.recentBlockhash = blockhash;
-    tx.add(...ixs);
-    tx.sign(operator);
+    const tx: Transaction = await createAndSignTransaction(svm, ixs, operator);
 
     // let's sim it first
     const simRes = svm.simulateTransaction(tx);
@@ -79,7 +68,8 @@ describe('Create Vault Instruction', () => {
     if (sendRes instanceof TransactionMetadata) {
       expect(simRes.meta().logs()).toEqual(sendRes.logs());
       expect(sendRes.logs()[1]).toBe('Program log: Instruction: CreateVault');
-      const message = 'Program 8NMw7pjvKbBe3bNRmxtKidth4LcZT8249Eo2LxVbRvt9 success';
+      const message =
+        'Program 8NMw7pjvKbBe3bNRmxtKidth4LcZT8249Eo2LxVbRvt9 success';
       expect(sendRes.logs()[sendRes.logs().length - 1]).toBe(message);
     } else {
       if (sendRes instanceof FailedTransactionMetadata) {
