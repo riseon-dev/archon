@@ -54,7 +54,7 @@ export const COPY_TRADING_PROGRAM = path.join(
  * create a liteSVM instance and load the program
  */
 export const createLiteSVMInstance = (): LiteSVM => {
-  const svm = new LiteSVM().withSplPrograms().withBuiltins();
+  const svm = new LiteSVM().withSplPrograms().withBuiltins().withSysvars().withPrecompiles();
   svm.addProgramFromFile(PROGRAM_ID, COPY_TRADING_PROGRAM);
   return svm;
 };
@@ -132,6 +132,7 @@ export const createVault = async (svm: LiteSVM) => {
     }
   }
 
+  console.log(`Vault created: ${vaultPubkey.toBase58()} for operator ${operator.publicKey.toBase58()}`);
   return {
     vaultPubkey,
     vaultBump,

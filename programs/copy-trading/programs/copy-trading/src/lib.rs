@@ -26,14 +26,14 @@ pub mod copy_trading {
         )
     }
 
-    pub fn deposit(mut ctx: Context<Deposit>, operator: Pubkey, sol_amount: u64) -> Result<()> {
+    pub fn deposit(mut ctx: Context<Deposit>, sol_amount: u64) -> Result<()> {
         // deposit
-        instructions::deposit_sol(&mut ctx, sol_amount)
+        instructions::deposit_sol(&mut ctx, sol_amount)?;
 
-        // // calculate vault amount based on sol amount here
-        // let vault_amount = sol_amount * ctx.accounts.vault.token_price;
-        //
-        // // mint vault tokens
-        // instructions::mint_vault_tokens(&mut ctx, operator, vault_amount)
+        // calculate vault amount based on sol amount here
+        let vault_amount = sol_amount * ctx.accounts.vault.token_price;
+
+        // mint vault tokens
+        instructions::mint_vault_tokens(&mut ctx, vault_amount)
     }
 }
