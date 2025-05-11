@@ -3,13 +3,11 @@ import {
   LAMPORTS_PER_SOL,
   PublicKey,
   SystemProgram,
+  SYSVAR_RENT_PUBKEY,
   Transaction,
   TransactionInstruction,
 } from '@solana/web3.js';
-import {
-  FailedTransactionMetadata,
-  TransactionMetadata,
-} from 'litesvm';
+import { FailedTransactionMetadata, TransactionMetadata } from 'litesvm';
 import { TOKEN_2022_PROGRAM_ID } from '@solana/spl-token';
 import {
   CREATE_VAULT_DISCRIMINATOR,
@@ -17,6 +15,10 @@ import {
   createLiteSVMInstance,
   PROGRAM_ID,
 } from './helpers';
+
+const TOKEN_METADATA_PROGRAM_ID = new PublicKey(
+  'metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s',
+);
 
 describe('Create Vault Instruction', () => {
   it('should create vault', async () => {
@@ -37,6 +39,15 @@ describe('Create Vault Instruction', () => {
       PROGRAM_ID,
     );
 
+    const [metadataPubkey, metadataBump] = PublicKey.findProgramAddressSync(
+      [
+        Buffer.from('metadata'),
+        TOKEN_METADATA_PROGRAM_ID.toBuffer(),
+        vaultPubkey.toBuffer(),
+      ],
+      PROGRAM_ID,
+    );
+
     const ixs = [
       new TransactionInstruction({
         programId: PROGRAM_ID,
@@ -44,12 +55,22 @@ describe('Create Vault Instruction', () => {
           { pubkey: operator.publicKey, isSigner: true, isWritable: true },
           { pubkey: vaultPubkey, isSigner: false, isWritable: true },
           { pubkey: mintPubkey, isSigner: false, isWritable: true },
+
+          // mint metadata pda from [b"metadata", token_metadata_program.key().as_ref(), vault.key().as_ref()],
+          // { pubkey: metadataPubkey, isSigner: false, isWritable: true },
+
           { pubkey: TOKEN_2022_PROGRAM_ID, isSigner: false, isWritable: false },
+
+          // token metadata program
+          // { pubkey: TOKEN_METADATA_PROGRAM_ID, isSigner: false, isWritable: false},
           {
             pubkey: SystemProgram.programId,
             isSigner: false,
             isWritable: false,
           },
+
+          // rent
+          // { pubkey: SYSVAR_RENT_PUBKEY, isSigner: false, isWritable: false},
         ],
         data: CREATE_VAULT_DISCRIMINATOR,
       }),
