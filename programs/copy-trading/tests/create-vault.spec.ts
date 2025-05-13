@@ -26,7 +26,7 @@ describe('Create Vault Instruction', () => {
     expect(vaultAccount.tokensIssued.toString()).toEqual('0');
     expect(vaultAccount.tokensBurnt.toString()).toEqual('0');
     expect(vaultAccount.solInTrade.toString()).toEqual('0');
-    expect(vaultAccount.tokenPrice.toString()).toEqual('0');
+    expect(vaultAccount.tokenPrice.toString()).toEqual('1');
 
     // Optionally verify the mint account exists
     const mintInfo = await provider.connection.getAccountInfo(mintPubkey);

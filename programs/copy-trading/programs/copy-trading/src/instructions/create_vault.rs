@@ -112,7 +112,7 @@ pub fn create_vault(
         tokens_issued: 0,
         tokens_burnt: 0,
         sol_in_trade: 0,
-        token_price: 0,
+        token_price: 1,
         mint: ctx.accounts.mint.key(),
         vault_bump: ctx.bumps.vault,
         mint_bump: ctx.bumps.mint,

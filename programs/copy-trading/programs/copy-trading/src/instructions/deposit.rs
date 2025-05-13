@@ -95,10 +95,6 @@ pub fn mint_vault_tokens(ctx: &mut Context<Deposit>, amount: u64) -> Result<()> 
         cpi_accounts,
         signer,
     );
-    anchor_spl::token_2022::mint_to(cpi_ctx, amount)?;
-
-    // Update the vault state
-    ctx.accounts.vault.tokens_issued += amount;
-
-    Ok(())
+    
+    anchor_spl::token_2022::mint_to(cpi_ctx, amount)
 }
