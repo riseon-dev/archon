@@ -62,6 +62,22 @@ export const createVault = async () => {
   };
 };
 
+export const createInvestorWithBalance = async ({
+  provider,
+                                                }: {
+  provider: anchor.AnchorProvider,
+}) => {
+  const investor = anchor.web3.Keypair.generate();
+  const airdropSignature = await provider.connection.requestAirdrop(
+    investor.publicKey,
+    anchor.web3.LAMPORTS_PER_SOL * 2,
+  );
+  await provider.connection.confirmTransaction(airdropSignature);
+  return {
+    investor
+  }
+};
+
 export const depositToVault = async ({
   program,
   operator,
