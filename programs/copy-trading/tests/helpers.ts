@@ -69,8 +69,8 @@ export const createVault = async () => {
  */
 export const createInvestorWithBalance = async ({
   provider,
-                                                }: {
-  provider: anchor.AnchorProvider,
+}: {
+  provider: anchor.AnchorProvider;
 }) => {
   const investor = anchor.web3.Keypair.generate();
   const airdropSignature = await provider.connection.requestAirdrop(
@@ -79,8 +79,8 @@ export const createInvestorWithBalance = async ({
   );
   await provider.connection.confirmTransaction(airdropSignature);
   return {
-    investor
-  }
+    investor,
+  };
 };
 
 /*
@@ -116,6 +116,48 @@ export const depositToVault = async ({
         false, // allowOwnerOffCurve parameter (optional)
         TOKEN_2022_PROGRAM_ID, // Specify the token program explicitly
       ),
+      associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
+      tokenProgram: TOKEN_2022_PROGRAM_ID,
+      systemProgram: anchor.web3.SystemProgram.programId,
+      rent: anchor.web3.SYSVAR_RENT_PUBKEY,
+    })
+    .signers([investor])
+    .rpc();
+};
+
+/*
+ * create a claim account for the user, tokens are burned from the user's ATA
+ */
+export const createClaim = async ({
+  program,
+  investor,
+  operator,
+  claimPubkey,
+  vaultPubkey,
+  mintPubkey,
+  userAta,
+  claimAmount,
+}: {
+  program: Program;
+  investor: anchor.web3.Keypair;
+  operator: anchor.web3.Keypair;
+  claimPubkey: anchor.web3.PublicKey;
+  vaultPubkey: anchor.web3.PublicKey;
+  mintPubkey: anchor.web3.PublicKey;
+  userAta: anchor.web3.PublicKey;
+  claimAmount: number;
+}) => {
+  const amount = new anchor.BN(claimAmount * anchor.web3.LAMPORTS_PER_SOL);
+
+  const tx = await program.methods
+    .createClaim(amount)
+    .accounts({
+      investor: investor.publicKey,
+      operator: operator.publicKey,
+      vault: vaultPubkey,
+      claim: claimPubkey,
+      mint: mintPubkey,
+      user_ata: userAta,
       associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
       tokenProgram: TOKEN_2022_PROGRAM_ID,
       systemProgram: anchor.web3.SystemProgram.programId,

@@ -1,5 +1,9 @@
 import * as anchor from '@coral-xyz/anchor';
-import {createInvestorWithBalance, createVault, depositToVault} from './helpers';
+import {
+  createInvestorWithBalance,
+  createVault,
+  depositToVault,
+} from './helpers';
 import {
   getAssociatedTokenAddressSync,
   TOKEN_2022_PROGRAM_ID,
@@ -13,7 +17,7 @@ describe('Deposit Instruction', () => {
       await createVault();
 
     // create investor and airdrop some SOL
-    const { investor }  = await createInvestorWithBalance({ provider });
+    const { investor } = await createInvestorWithBalance({ provider });
 
     // check initial balance for record
     const initialBalance = await provider.connection.getBalance(vaultPubkey);
@@ -42,7 +46,7 @@ describe('Deposit Instruction', () => {
       await createVault();
 
     // create investor and airdrop some SOL
-    const { investor }  = await createInvestorWithBalance({ provider });
+    const { investor } = await createInvestorWithBalance({ provider });
 
     const mintToATA = getAssociatedTokenAddressSync(
       mintPubkey,
