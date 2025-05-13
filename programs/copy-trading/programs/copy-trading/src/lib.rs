@@ -48,12 +48,14 @@ pub mod copy_trading {
         instructions::create_claim(ctx, amount)
     }
 
-    pub fn withdraw(ctx: Context<Withdraw>, amount: u64) -> Result<()> {
+    pub fn withdraw(ctx: Context<Withdraw>) -> Result<()> {
+        // TODO check whether there is SOL balance
+
         // calculate sol amount from token price
-        let sol_amount = amount * ctx.accounts.vault.token_price;
+        let sol_amount = ctx.accounts.claim.token_amount * ctx.accounts.vault.token_price;
 
         // remove value from tokens burnt
-        ctx.accounts.vault.tokens_burnt -= amount;
+        ctx.accounts.vault.tokens_burnt -= ctx.accounts.claim.token_amount;
 
         // transfer sol to user
         instructions::withdraw(ctx, sol_amount)
