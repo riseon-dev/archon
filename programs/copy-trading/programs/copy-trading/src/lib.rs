@@ -34,7 +34,7 @@ pub mod copy_trading {
         let vault_amount = sol_amount * ctx.accounts.vault.token_price;
 
         // mint vault tokens
-         instructions::mint_vault_tokens(&mut ctx, vault_amount)?;
+        instructions::mint_vault_tokens(&mut ctx, vault_amount)?;
 
         // Update the vault state
         ctx.accounts.vault.tokens_issued += vault_amount;

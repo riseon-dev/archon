@@ -5,7 +5,7 @@ use anchor_lang::solana_program::system_program;
 use anchor_lang::system_program::{transfer, Transfer};
 use anchor_spl::{
     associated_token::AssociatedToken,
-    token_2022::Token2022,
+    token_2022::{mint_to, MintTo, Token2022},
     token_interface::{Mint, TokenAccount},
 };
 
@@ -83,9 +83,8 @@ pub fn mint_vault_tokens(ctx: &mut Context<Deposit>, amount: u64) -> Result<()> 
     ];
     let signer = &[&seeds[..]];
 
-
     // Mint tokens to the investor
-    let cpi_accounts = anchor_spl::token_2022::MintTo {
+    let cpi_accounts = MintTo {
         mint: ctx.accounts.mint.to_account_info(),
         to: ctx.accounts.mint_to.to_account_info(),
         authority: ctx.accounts.vault.to_account_info(),
@@ -95,6 +94,6 @@ pub fn mint_vault_tokens(ctx: &mut Context<Deposit>, amount: u64) -> Result<()> 
         cpi_accounts,
         signer,
     );
-    
-    anchor_spl::token_2022::mint_to(cpi_ctx, amount)
+
+    mint_to(cpi_ctx, amount)
 }

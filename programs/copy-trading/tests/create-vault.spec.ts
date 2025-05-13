@@ -19,7 +19,9 @@ describe('Create Vault Instruction', () => {
     const vaultAccount = await program.account.vault.fetch(vaultPubkey);
 
     // Assert the vault account has the expected state
-    expect(vaultAccount.operator.toString()).toEqual(operator.publicKey.toString());
+    expect(vaultAccount.operator.toString()).toEqual(
+      operator.publicKey.toString(),
+    );
     expect(vaultAccount.mint.toString()).toEqual(mintPubkey.toString());
     expect(vaultAccount.vaultBump).toEqual(vaultBump);
     expect(vaultAccount.mintBump).toEqual(mintBump);
@@ -30,16 +32,18 @@ describe('Create Vault Instruction', () => {
 
     // Optionally verify the mint account exists
     const mintInfo = await provider.connection.getAccountInfo(mintPubkey);
-    expect(mintInfo).toBeTruthy()
+    expect(mintInfo).toBeTruthy();
 
     const mintAccount = await getMint(
       provider.connection,
       mintPubkey,
       'confirmed',
-      TOKEN_2022_PROGRAM_ID
+      TOKEN_2022_PROGRAM_ID,
     );
 
-    expect(mintAccount.mintAuthority.toString()).toEqual(vaultPubkey.toString());
+    expect(mintAccount.mintAuthority.toString()).toEqual(
+      vaultPubkey.toString(),
+    );
   });
 
   it.todo('should not allow closing of vault by non-operator');

@@ -17,7 +17,6 @@ const web3 = anchor.web3;
 // const programId = new anchor.web3.PublicKey('YourProgramId');
 // const program = new anchor.Program(idl, programId, provider);
 
-
 export const createVault = async () => {
   // provider
   const provider = anchor.AnchorProvider.env();

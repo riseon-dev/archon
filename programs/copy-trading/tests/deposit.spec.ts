@@ -37,7 +37,7 @@ describe('Deposit Instruction', () => {
           mintPubkey,
           investor.publicKey,
           false, // allowOwnerOffCurve parameter (optional)
-          TOKEN_2022_PROGRAM_ID // Specify the token program explicitly
+          TOKEN_2022_PROGRAM_ID, // Specify the token program explicitly
         ),
         associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
         tokenProgram: TOKEN_2022_PROGRAM_ID,
@@ -68,11 +68,11 @@ describe('Deposit Instruction', () => {
     // amount to deposit in vault
     const depositAmount = new anchor.BN(0.2 * anchor.web3.LAMPORTS_PER_SOL);
 
-    const mintToATA  = getAssociatedTokenAddressSync(
+    const mintToATA = getAssociatedTokenAddressSync(
       mintPubkey,
       investor.publicKey,
       false, // allowOwnerOffCurve parameter (optional)
-      TOKEN_2022_PROGRAM_ID // Specify the token program explicitly
+      TOKEN_2022_PROGRAM_ID, // Specify the token program explicitly
     );
 
     try {
@@ -100,9 +100,12 @@ describe('Deposit Instruction', () => {
     }
 
     // check investor token balance
-    const investorTokenAccountInfo = await provider.connection.getTokenAccountBalance(mintToATA);
+    const investorTokenAccountInfo =
+      await provider.connection.getTokenAccountBalance(mintToATA);
 
     // given price has not moved, minted amount should be equal to deposit amount
-    expect(investorTokenAccountInfo.value.amount).toEqual(depositAmount.toString());
+    expect(investorTokenAccountInfo.value.amount).toEqual(
+      depositAmount.toString(),
+    );
   });
 });
