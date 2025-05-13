@@ -4,6 +4,20 @@ import { TOKEN_2022_PROGRAM_ID } from '@solana/spl-token';
 
 const web3 = anchor.web3;
 
+//import * as anchor from '@coral-xyz/anchor';
+// import fs from 'fs';
+//
+// const provider = anchor.AnchorProvider.env();
+// anchor.setProvider(provider);
+//
+// const idlFilePath = './target/idl/my_program.json';
+// const idlString = fs.readFileSync(idlFilePath, 'utf8');
+// const idl = JSON.parse(idlString);
+//
+// const programId = new anchor.web3.PublicKey('YourProgramId');
+// const program = new anchor.Program(idl, programId, provider);
+
+
 export const createVault = async () => {
   // provider
   const provider = anchor.AnchorProvider.env();

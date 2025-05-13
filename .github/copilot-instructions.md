@@ -14,3 +14,5 @@ Do not use magic numbers anywhere. I don't want to see `8 + 32` or whatever.  Do
 Use `catch (thrownObject)` and then `const error = thrownObject as Error;` - you can assume any item thrown is an Error.
 
 Use full words. Never use `e` for something thrown or `tx` for a transaction signature.
+
+I'm using `jest` for testing, please don't use `to.equal` in assertions. The jest way is `expect(...).toEqual(...)`. Do not use `chai` or any other assertion library. Use `jest` only.
