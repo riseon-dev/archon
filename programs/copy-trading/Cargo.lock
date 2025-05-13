@@ -756,6 +756,8 @@ dependencies = [
  "anchor-lang",
  "anchor-spl",
  "proc-macro2",
+ "spl-token-metadata-interface",
+ "spl-type-length-value",
 ]
 
 [[package]]
