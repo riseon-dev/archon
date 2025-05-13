@@ -8,6 +8,9 @@ import {
 
 const web3 = anchor.web3;
 
+/*
+ * create a vault account and all the related setup keys for tests
+ */
 export const createVault = async () => {
   // provider
   const provider = anchor.AnchorProvider.env();
@@ -50,7 +53,6 @@ export const createVault = async () => {
     .signers([operator])
     .rpc();
 
-  console.log('Vault Create Tx Signature', tx);
   return {
     provider,
     program,
@@ -62,6 +64,9 @@ export const createVault = async () => {
   };
 };
 
+/*
+ * create an investor account and airdrop some SOL
+ */
 export const createInvestorWithBalance = async ({
   provider,
                                                 }: {
@@ -78,6 +83,9 @@ export const createInvestorWithBalance = async ({
   }
 };
 
+/*
+ * deposit some SOL into the vault, user receives tokens
+ */
 export const depositToVault = async ({
   program,
   operator,
@@ -115,6 +123,4 @@ export const depositToVault = async ({
     })
     .signers([investor])
     .rpc();
-
-  console.log('Deposit Tx Signature', depositTx);
 };
