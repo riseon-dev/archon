@@ -10,7 +10,7 @@ import {
   getAssociatedTokenAddressSync,
   TOKEN_2022_PROGRAM_ID,
 } from '@solana/spl-token';
-import {LAMPORTS_PER_SOL} from "@solana/web3.js";
+import { LAMPORTS_PER_SOL } from '@solana/web3.js';
 
 describe('Create Claim Instruction', () => {
   it('should burn user tokens and create a claim account', async () => {

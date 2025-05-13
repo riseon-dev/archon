@@ -9,6 +9,12 @@ import {
 const web3 = anchor.web3;
 
 /*
+ * sleep the program for a bit
+ */
+export const sleep = (ms: number) =>
+  new Promise((resolve) => setTimeout(resolve, ms));
+
+/*
  * create a vault account and all the related setup keys for tests
  */
 export const createVault = async () => {
@@ -39,19 +45,27 @@ export const createVault = async () => {
     [Buffer.from('mint'), vaultPubkey.toBuffer()],
     program.programId,
   );
+  try {
+    // call the create vault transaction method
+    const tx = await program.methods
+      .createVault()
+      .accounts({
+        operator: operator.publicKey,
+        tokenProgram: TOKEN_2022_PROGRAM_ID,
+        vault: vaultPubkey,
+        mint: mintPubkey,
+        systemProgram: web3.SystemProgram.programId,
+      })
+      .signers([operator])
+      .rpc();
 
-  // call the create vault transaction method
-  const tx = await program.methods
-    .createVault()
-    .accounts({
-      operator: operator.publicKey,
-      tokenProgram: TOKEN_2022_PROGRAM_ID,
-      vault: vaultPubkey,
-      mint: mintPubkey,
-      systemProgram: web3.SystemProgram.programId,
-    })
-    .signers([operator])
-    .rpc();
+    // needed because sometimes it returns before the transaction is confirmed
+    await sleep(100);
+  } catch (error) {
+    console.error('Error creating vault:', error);
+    if (error?.getLogs) console.error(error.getLogs());
+    throw error;
+  }
 
   return {
     provider,

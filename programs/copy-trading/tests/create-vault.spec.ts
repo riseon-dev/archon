@@ -22,6 +22,7 @@ describe('Create Vault Instruction', () => {
     expect(vaultAccount.operator.toString()).toEqual(
       operator.publicKey.toString(),
     );
+
     expect(vaultAccount.mint.toString()).toEqual(mintPubkey.toString());
     expect(vaultAccount.vaultBump).toEqual(vaultBump);
     expect(vaultAccount.mintBump).toEqual(mintBump);

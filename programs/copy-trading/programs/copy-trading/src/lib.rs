@@ -41,7 +41,7 @@ pub mod copy_trading {
 
         Ok(())
     }
-    
+
     pub fn create_claim(ctx: Context<CreateClaim>, amount: u64) -> Result<()> {
         instructions::create_claim(ctx, amount)
     }
