@@ -57,11 +57,7 @@ pub fn create_vault(
 
     // PDA signer seeds
     let operator_key = ctx.accounts.operator.key();
-    let seeds = &[
-        b"vault",
-        operator_key.as_ref(),
-        &[ctx.bumps.vault]
-    ];    
+    let seeds = &[b"vault", operator_key.as_ref(), &[ctx.bumps.vault]];
     let signer = &[&seeds[..]];
 
     let token_metadata = TokenMetadata {
