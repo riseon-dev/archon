@@ -67,10 +67,9 @@ pub fn create_claim(ctx: Context<CreateClaim>, amount: u64) -> Result<()> {
     let cpi_accounts = Burn {
         mint: ctx.accounts.mint.to_account_info(),
         from: ctx.accounts.user_ata.to_account_info(),
-        authority: ctx.accounts.vault.to_account_info(),
+        authority: ctx.accounts.investor.to_account_info(),
     };
 
     let cpi_ctx = CpiContext::new(ctx.accounts.token_program.to_account_info(), cpi_accounts);
-
     burn(cpi_ctx, amount)
 }
