@@ -1,10 +1,10 @@
 import * as anchor from '@coral-xyz/anchor';
-import { createVault } from './helpers';
+import { createVault, depositToVault } from './helpers';
 import {
-  ASSOCIATED_TOKEN_PROGRAM_ID,
   getAssociatedTokenAddressSync,
   TOKEN_2022_PROGRAM_ID,
 } from '@solana/spl-token';
+import { LAMPORTS_PER_SOL } from '@solana/web3.js';
 
 describe('Deposit Instruction', () => {
   it('should allow deposits of sol', async () => {
@@ -23,33 +23,22 @@ describe('Deposit Instruction', () => {
     // check initial balance for record
     const initialBalance = await provider.connection.getBalance(vaultPubkey);
 
-    // amount to deposit in vault
-    const depositAmount = new anchor.BN(0.2 * anchor.web3.LAMPORTS_PER_SOL);
+    const depositAmount = 0.2;
 
-    const depositTx = await program.methods
-      .deposit(depositAmount)
-      .accounts({
-        investor: investor.publicKey,
-        operator: operator.publicKey,
-        vault: vaultPubkey,
-        mint: mintPubkey,
-        mintTo: getAssociatedTokenAddressSync(
-          mintPubkey,
-          investor.publicKey,
-          false, // allowOwnerOffCurve parameter (optional)
-          TOKEN_2022_PROGRAM_ID, // Specify the token program explicitly
-        ),
-        associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
-        tokenProgram: TOKEN_2022_PROGRAM_ID,
-        systemProgram: anchor.web3.SystemProgram.programId,
-        rent: anchor.web3.SYSVAR_RENT_PUBKEY,
-      })
-      .signers([investor])
-      .rpc();
+    await depositToVault({
+      program,
+      operator,
+      vaultPubkey,
+      mintPubkey,
+      investor,
+      depositAmount,
+    });
 
     // check vault sol balance
     const currentBalance = await provider.connection.getBalance(vaultPubkey);
-    expect(currentBalance).toEqual(initialBalance + depositAmount.toNumber());
+    expect(currentBalance).toEqual(
+      initialBalance + depositAmount * LAMPORTS_PER_SOL,
+    );
   });
 
   it('should mint tokens to investor', async () => {
@@ -65,39 +54,23 @@ describe('Deposit Instruction', () => {
     );
     await provider.connection.confirmTransaction(airdropSignature);
 
-    // amount to deposit in vault
-    const depositAmount = new anchor.BN(0.2 * anchor.web3.LAMPORTS_PER_SOL);
-
     const mintToATA = getAssociatedTokenAddressSync(
       mintPubkey,
       investor.publicKey,
       false, // allowOwnerOffCurve parameter (optional)
-      TOKEN_2022_PROGRAM_ID, // Specify the token program explicitly
+      TOKEN_2022_PROGRAM_ID, // for spl-token-2022 specify it explicitly
     );
 
-    try {
-      const depositTx = await program.methods
-        .deposit(depositAmount)
-        .accounts({
-          investor: investor.publicKey,
-          operator: operator.publicKey,
-          vault: vaultPubkey,
-          mint: mintPubkey,
-          mintTo: mintToATA,
-          associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
-          tokenProgram: TOKEN_2022_PROGRAM_ID,
-          systemProgram: anchor.web3.SystemProgram.programId,
-          rent: anchor.web3.SYSVAR_RENT_PUBKEY,
-        })
-        .signers([investor])
-        .rpc();
-      console.log('Deposit Tx Signature', depositTx);
-    } catch (error) {
-      console.log('Error', error);
-      if (error?.getLogs) console.log('Error', await error.getLogs());
+    const depositAmount = 0.2;
 
-      throw error;
-    }
+    await depositToVault({
+      program,
+      operator,
+      vaultPubkey,
+      mintPubkey,
+      investor,
+      depositAmount,
+    });
 
     // check investor token balance
     const investorTokenAccountInfo =
@@ -105,7 +78,7 @@ describe('Deposit Instruction', () => {
 
     // given price has not moved, minted amount should be equal to deposit amount
     expect(investorTokenAccountInfo.value.amount).toEqual(
-      depositAmount.toString(),
+      (depositAmount * LAMPORTS_PER_SOL).toString(),
     );
   });
 });

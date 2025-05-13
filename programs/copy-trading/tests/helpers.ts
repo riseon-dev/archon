@@ -1,21 +1,12 @@
 import * as anchor from '@coral-xyz/anchor';
 import { Program } from '@coral-xyz/anchor';
-import { TOKEN_2022_PROGRAM_ID } from '@solana/spl-token';
+import {
+  ASSOCIATED_TOKEN_PROGRAM_ID,
+  getAssociatedTokenAddressSync,
+  TOKEN_2022_PROGRAM_ID,
+} from '@solana/spl-token';
 
 const web3 = anchor.web3;
-
-//import * as anchor from '@coral-xyz/anchor';
-// import fs from 'fs';
-//
-// const provider = anchor.AnchorProvider.env();
-// anchor.setProvider(provider);
-//
-// const idlFilePath = './target/idl/my_program.json';
-// const idlString = fs.readFileSync(idlFilePath, 'utf8');
-// const idl = JSON.parse(idlString);
-//
-// const programId = new anchor.web3.PublicKey('YourProgramId');
-// const program = new anchor.Program(idl, programId, provider);
 
 export const createVault = async () => {
   // provider
@@ -69,4 +60,45 @@ export const createVault = async () => {
     vaultBump,
     mintBump,
   };
+};
+
+export const depositToVault = async ({
+  program,
+  operator,
+  vaultPubkey,
+  mintPubkey,
+  investor,
+  depositAmount,
+}: {
+  program: Program;
+  operator: anchor.web3.Keypair;
+  vaultPubkey: anchor.web3.PublicKey;
+  mintPubkey: anchor.web3.PublicKey;
+  investor: anchor.web3.Keypair;
+  depositAmount: number;
+}) => {
+  const amount = new anchor.BN(depositAmount * anchor.web3.LAMPORTS_PER_SOL);
+
+  const depositTx = await program.methods
+    .deposit(amount)
+    .accounts({
+      investor: investor.publicKey,
+      operator: operator.publicKey,
+      vault: vaultPubkey,
+      mint: mintPubkey,
+      mintTo: getAssociatedTokenAddressSync(
+        mintPubkey,
+        investor.publicKey,
+        false, // allowOwnerOffCurve parameter (optional)
+        TOKEN_2022_PROGRAM_ID, // Specify the token program explicitly
+      ),
+      associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
+      tokenProgram: TOKEN_2022_PROGRAM_ID,
+      systemProgram: anchor.web3.SystemProgram.programId,
+      rent: anchor.web3.SYSVAR_RENT_PUBKEY,
+    })
+    .signers([investor])
+    .rpc();
+
+  console.log('Deposit Tx Signature', depositTx);
 };
