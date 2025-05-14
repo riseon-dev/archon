@@ -18,12 +18,17 @@ declare_id!("8NMw7pjvKbBe3bNRmxtKidth4LcZT8249Eo2LxVbRvt9");
 pub mod copy_trading {
     use super::*;
 
-    pub fn create_vault(ctx: Context<CreateVault>) -> Result<()> {
+    pub fn create_vault(
+        ctx: Context<CreateVault>,
+        token_name: String,
+        token_symbol: String,
+        token_uri: String,
+    ) -> Result<()> {
         instructions::create_vault(
             ctx,
-            "Test".to_string(),
-            "TEST".to_string(),
-            "https://example.com".to_string(),
+            token_name,
+            token_symbol,
+            token_uri,
         )
     }
 
