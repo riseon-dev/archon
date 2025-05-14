@@ -20,7 +20,7 @@ MVP for Riseon SocialFi Project
 ## Anchor Integration Tests
 
 - Start two terminal windows
-- Run `surfpool start` in the project directory to start the local Solana cluster in the first terminal window.
+- Run `surfpool start --watch` in the project directory to start the local Solana cluster in the first terminal window.
 - Run the following commands in the second terminal window:
 - - Run `anchor build` to build the program.
 - - Run `anchor deploy` to deploy the program to the local cluster.

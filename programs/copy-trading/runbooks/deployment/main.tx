@@ -1,0 +1,15 @@
+################################################################
+# Manage copy-trading deployment through Crypto Infrastructure as Code
+################################################################
+
+addon "svm" {
+    rpc_api_url = input.rpc_api_url
+    network_id = input.network_id
+}
+
+action "deploy_copy_trading" "svm::deploy_program" {
+    description = "Deploy copy_trading program"
+    program = svm::get_program_from_anchor_project("copy_trading") 
+    authority = signer.authority
+    payer = signer.payer
+}

@@ -1,6 +1,6 @@
 import * as anchor from '@coral-xyz/anchor';
-import { Program } from '@coral-xyz/anchor';
-import { PublicKey, Keypair } from '@solana/web3.js';
+import {AnchorProvider, Program, Wallet as AnchorWallet} from '@coral-xyz/anchor';
+import {PublicKey, Keypair, Connection} from '@solana/web3.js';
 import {
   ORCA_WHIRLPOOL_PROGRAM_ID,
   ORCA_WHIRLPOOLS_CONFIG,
@@ -37,19 +37,12 @@ const USDC = {
 };
 
 describe('Swap Instructions', () => {
-  // const connection = new Connection(TEST_PROVIDER_URL, "confirmed");
-  // const testWallet = Keypair.fromSecretKey(new Uint8Array(TEST_WALLET_SECRET));
 
-  // const connection = new Connection('http://127.0.0.1:8899', 'confirmed');
-  // const testWallet = Keypair.fromSecretKey(Buffer.from([117,37,137,255,111,177,234,144,186,79,159,201,57,65,169,71,191,1,209,192,238,154,32,26,65,155,215,147,71,39,43,254,5,253,22,252,205,245,105,231,33,109,96,190,218,229,203,158,161,145,119,82,18,145,190,127,181,155,168,196,136,169,10,64]));
-
-  const provider = anchor.AnchorProvider.env();
-  anchor.setProvider(provider);
-
-  const connection = provider.connection;
+  const connection = new Connection('http://127.0.0.1:8899', 'confirmed');
+  const testWallet = Keypair.fromSecretKey(Buffer.from([117,37,137,255,111,177,234,144,186,79,159,201,57,65,169,71,191,1,209,192,238,154,32,26,65,155,215,147,71,39,43,254,5,253,22,252,205,245,105,231,33,109,96,190,218,229,203,158,161,145,119,82,18,145,190,127,181,155,168,196,136,169,10,64]));
 
   const program = anchor.workspace.CopyTrading as Program<CopyTrading>;
-  //const provider = new AnchorProvider(connection, new AnchorWallet(testWallet), {commitment: "confirmed"});
+  const provider = new AnchorProvider(connection, new AnchorWallet(testWallet), {commitment: "confirmed"});
   const wallet = provider.wallet as Wallet;
 
   const whirlpool_ctx = WhirlpoolContext.withProvider(
