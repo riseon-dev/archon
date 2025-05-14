@@ -40,6 +40,12 @@ pub fn withdraw(ctx: Context<Withdraw>, amount: u64) -> Result<()> {
         ctx.accounts.vault.key()
     );
 
+    // Check whether the user has a claim account
+    let claim_lamports: u64 = ctx.accounts.claim.get_lamports();
+    if claim_lamports <= 0 {
+        return err!(error::ErrorCode::NoClaimAccount);
+    }
+
     // Check that the vault has enough lamports to withdraw
     let vault_info = ctx.accounts.vault.to_account_info();
     let vault_lamports = vault_info.lamports();

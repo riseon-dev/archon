@@ -48,7 +48,9 @@ export const createVault = async () => {
   try {
     // call the create vault transaction method
     const tx = await program.methods
-      .createVault()
+      .createVault(
+        "Test", "TSTV", "https://example.com"
+      )
       .accounts({
         operator: operator.publicKey,
         tokenProgram: TOKEN_2022_PROGRAM_ID,

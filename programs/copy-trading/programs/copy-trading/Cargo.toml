@@ -22,3 +22,5 @@ anchor-spl = {  version = "0.30.1"}
 proc-macro2 = "=1.0.94"
 spl-token-metadata-interface = "0.3.3"
 spl-type-length-value = "0.4.3"
+whirlpool-cpi = { git = "https://github.com/orca-so/whirlpool-cpi", branch = "anchor/0.30.1" }
+ahash = "=0.8.11"

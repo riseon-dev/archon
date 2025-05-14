@@ -29,7 +29,7 @@ describe('Create Vault Instruction', () => {
     expect(vaultAccount.tokensIssued.toString()).toEqual('0');
     expect(vaultAccount.tokensBurnt.toString()).toEqual('0');
     expect(vaultAccount.solInTrade.toString()).toEqual('0');
-    expect(vaultAccount.tokenPrice.toString()).toEqual('1');
+    expect(vaultAccount.tokenPrice.toString()).toEqual('1000000');
 
     // Optionally verify the mint account exists
     const mintInfo = await provider.connection.getAccountInfo(mintPubkey);
@@ -46,10 +46,4 @@ describe('Create Vault Instruction', () => {
       vaultPubkey.toString(),
     );
   });
-
-  it.todo('should not allow closing of vault by non-operator');
-
-  it.todo('should not allow closing vault if there are deposits');
-
-  it.todo('should close vault');
 });
