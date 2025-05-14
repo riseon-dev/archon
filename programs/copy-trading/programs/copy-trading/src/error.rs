@@ -7,4 +7,7 @@ pub enum ErrorCode {
 
     #[msg("Insufficient SOL balance in vault. Try again later.")]
     InsufficientSOLBalance,
+
+    #[msg("User does not have a claim account")]
+    NoClaimAccount,
 }

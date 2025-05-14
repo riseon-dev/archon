@@ -184,27 +184,27 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_proportional_increase() {
+    fn calculate_token_price_test_proportional_increase() {
         // Initial: 100 SOL, 100 tokens, price 100 (1:1)
         // New SOL supply is 20% higher
         assert_eq!(calculate_new_token_price(100, 120, 100, 100), 120);
     }
 
     #[test]
-    fn test_proportional_decrease() {
+    fn calculate_token_price_test_proportional_decrease() {
         // Initial: 100 SOL, 100 tokens, price 100
         // New SOL supply is 20% lower
         assert_eq!(calculate_new_token_price(100, 80, 100, 100), 80);
     }
 
     #[test]
-    fn test_zero_token_supply() {
+    fn calculate_token_price_test_zero_token_supply() {
         // Should return the current price when token supply is zero (to avoid division by zero)
         assert_eq!(calculate_new_token_price(100, 120, 0, 100), 100);
     }
 
     #[test]
-    fn test_zero_old_sol_supply() {
+    fn calculate_token_price_test_zero_old_sol_supply() {
         // Edge case: should handle zero old SOL supply gracefully
         assert_eq!(calculate_new_token_price(0, 100, 100, 50), 50); // Should return current price
     }
