@@ -1,7 +1,7 @@
 import * as anchor from '@coral-xyz/anchor';
 import {createInvestorWithBalance, createVault, depositToVault} from './helpers';
 
-describe('Create Vault Instruction', () => {
+describe('Close Vault Instruction', () => {
   it('should close vault', async () => {
     const {
       provider,
