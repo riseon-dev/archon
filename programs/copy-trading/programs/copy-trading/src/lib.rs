@@ -10,6 +10,7 @@ use anchor_lang::prelude::*;
 pub use constants::*;
 pub use instructions::*;
 pub use state::*;
+pub use error::ErrorCode;
 
 declare_id!("8NMw7pjvKbBe3bNRmxtKidth4LcZT8249Eo2LxVbRvt9");
 
@@ -34,7 +35,7 @@ pub mod copy_trading {
         let vault_amount = sol_amount * ctx.accounts.vault.token_price.checked_div(1 * 10u64.pow
         (VAULT_TOKEN_PRICE_DECIMALS as u32)).unwrap();
 
-        // Update the vault state
+        // Update tokens_issued supply
         ctx.accounts.vault.tokens_issued += vault_amount;
 
         // mint vault tokens
@@ -45,17 +46,22 @@ pub mod copy_trading {
         // increase tokens burnt
         ctx.accounts.vault.tokens_burnt += amount;
 
+        // decrease the tokens issued supply
+        ctx.accounts.vault.tokens_issued -= amount;
+
         // create a claim account for user
         instructions::create_claim(ctx, amount)
     }
 
     pub fn withdraw(ctx: Context<Withdraw>) -> Result<()> {
-        // TODO check whether there is SOL balance
-
         // calculate sol amount from token price
-        // not using checked_div here to avoid panic while withdrawing
-        let token_price = ctx.accounts.vault.token_price / (1 * 10u64.pow(VAULT_TOKEN_PRICE_DECIMALS as u32));
+        let token_price = ctx.accounts.vault.token_price.checked_div(1 * 10u64.pow
+        (VAULT_TOKEN_PRICE_DECIMALS as u32)).unwrap();
         let sol_amount = ctx.accounts.claim.token_amount * token_price;
+
+        // check if vault has enough sol balance
+        let vault_balance = ctx.accounts.vault.to_account_info().lamports();
+        require_gt!(vault_balance, sol_amount, ErrorCode::InsufficientSOLBalance);
 
         // remove value from tokens burnt
         ctx.accounts.vault.tokens_burnt -= ctx.accounts.claim.token_amount;
