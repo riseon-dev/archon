@@ -20,3 +20,4 @@ wallet = "~/.config/solana/id.json"
 [scripts]
 clean = "cargo clean"
 test = "cargo test && pnpm run tests"
+swaptest = "pnpm run surfpool-test"

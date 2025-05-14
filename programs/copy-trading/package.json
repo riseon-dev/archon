@@ -2,6 +2,7 @@
   "license": "MIT",
   "scripts": {
     "tests": "jest -i --verbose",
+    "surfpool-test": "echo 'hello'",
     "lint:fix": "prettier \"*/**/*{.js,.ts}\" -w",
     "lint": "prettier \"*/**/*{.js,.ts}\" --check"
   },
