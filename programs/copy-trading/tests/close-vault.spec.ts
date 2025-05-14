@@ -1,6 +1,5 @@
 import * as anchor from '@coral-xyz/anchor';
 import {createInvestorWithBalance, createVault, depositToVault} from './helpers';
-import { getMint, TOKEN_2022_PROGRAM_ID } from '@solana/spl-token';
 
 describe('Create Vault Instruction', () => {
   it('should close vault', async () => {
