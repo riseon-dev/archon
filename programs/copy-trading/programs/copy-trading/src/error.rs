@@ -10,4 +10,7 @@ pub enum ErrorCode {
 
     #[msg("User does not have a claim account")]
     NoClaimAccount,
+
+    #[msg("Vault is not empty")]
+    VaultNotEmpty,
 }

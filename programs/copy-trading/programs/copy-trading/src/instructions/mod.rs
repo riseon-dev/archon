@@ -12,3 +12,6 @@ pub use swap::*;
 
 pub mod create_claim;
 pub use create_claim::*;
+
+pub mod close_vault;
+pub use close_vault::*;

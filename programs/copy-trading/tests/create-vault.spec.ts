@@ -46,10 +46,4 @@ describe('Create Vault Instruction', () => {
       vaultPubkey.toString(),
     );
   });
-
-  it.todo('should not allow closing of vault by non-operator');
-
-  it.todo('should not allow closing vault if there are deposits');
-
-  it.todo('should close vault');
 });

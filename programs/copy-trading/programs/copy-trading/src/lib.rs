@@ -79,6 +79,10 @@ pub mod copy_trading {
         instructions::withdraw(ctx, sol_amount)
     }
 
+    pub fn close_vault(ctx: Context<CloseVault>) -> Result<()> {
+        instructions::close_vault(ctx)
+    }
+
     pub fn swap_from_sol(
         ctx: Context<SwapFromSol>,
         sol_amount: u64,
