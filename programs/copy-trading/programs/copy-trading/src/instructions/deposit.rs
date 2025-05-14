@@ -9,9 +9,6 @@ use anchor_spl::{
     token_interface::{Mint, TokenAccount},
 };
 
-// Look at the following repo
-// https://github.com/solana-developers/program-examples/blob/main/tokens/pda-mint-authority/anchor/programs/token-minter/Cargo.toml
-
 #[derive(Accounts)]
 #[instruction(sol_amount: u64)]
 pub struct Deposit<'info> {

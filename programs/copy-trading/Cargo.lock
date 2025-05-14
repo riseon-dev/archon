@@ -56,6 +56,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e89da841a80418a9b391ebaea17f5c112ffaaa96f621d2c285b5174da76b9011"
 dependencies = [
  "cfg-if",
+ "getrandom 0.2.16",
  "once_cell",
  "version_check",
  "zerocopy 0.7.35",
@@ -753,11 +754,13 @@ checksum = "7c74b8349d32d297c9134b8c88677813a227df8f779daa29bfc29c183fe3dca6"
 name = "copy-trading"
 version = "0.1.0"
 dependencies = [
+ "ahash 0.8.11",
  "anchor-lang",
  "anchor-spl",
  "proc-macro2",
  "spl-token-metadata-interface",
  "spl-type-length-value",
+ "whirlpool-cpi",
 ]
 
 [[package]]
@@ -876,6 +879,26 @@ dependencies = [
  "darling_core",
  "quote",
  "syn 2.0.101",
+]
+
+[[package]]
+name = "default-boxed"
+version = "0.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "b48cc7cb0b3bcd8acee5eb26e45f8f4b597c5e57a67deb86e3d1d4a1e57a1c31"
+dependencies = [
+ "default-boxed-derive",
+]
+
+[[package]]
+name = "default-boxed-derive"
+version = "0.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "94bbd6a078996f7e3af0e053377eb5577dee801eae2f22af2cd1e58fa33a0f5e"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn 1.0.109",
 ]
 
 [[package]]
@@ -2551,6 +2574,16 @@ checksum = "33b6dd2ef9186f1f2072e409e99cd22a975331a6b3591b12c764e0e55c60d5d2"
 dependencies = [
  "js-sys",
  "wasm-bindgen",
+]
+
+[[package]]
+name = "whirlpool-cpi"
+version = "0.1.4"
+source = "git+https://github.com/orca-so/whirlpool-cpi?branch=anchor/0.30.1#0449cf85a0e93686710b5dbfefb69704a98ef82a"
+dependencies = [
+ "anchor-lang",
+ "bincode",
+ "default-boxed",
 ]
 
 [[package]]
