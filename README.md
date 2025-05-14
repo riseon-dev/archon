@@ -9,7 +9,6 @@ MVP for Riseon SocialFi Project
   * `api/`: The API service for the project.
   * `web/`: The frontend for the project.
 
-
 # Running Tests
 
 ## Anchor Unit Tests
