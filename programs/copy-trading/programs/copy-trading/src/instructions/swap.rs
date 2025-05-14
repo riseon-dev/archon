@@ -1,12 +1,8 @@
 pub use crate::constants::*;
 use crate::{TradingPosition, Vault};
 use anchor_lang::prelude::*;
-use anchor_spl::{
-    token_interface::{Token2022, TokenAccount},
-};
-use whirlpool_cpi::{
-    self, program::Whirlpool as WhirlpoolProgram, state::*,
-};
+use anchor_spl::token_interface::{Token2022, TokenAccount};
+use whirlpool_cpi::{self, program::Whirlpool as WhirlpoolProgram, state::*};
 
 /*
  * Instruction to swap sol to any token
