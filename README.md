@@ -12,12 +12,12 @@ MVP for Riseon SocialFi Project
 
 # Running Tests
 
-## Unit Tests
+## Anchor Unit Tests
 
 - Run `anchor build` in the project directory to build the program.
 - Run `anchor test` in the project directory to run the unit tests.
 
-## Integration Tests
+## Anchor Integration Tests
 
 - Start two terminal windows
 - Run `surfpool start` in the project directory to start the local Solana cluster in the first terminal window.
