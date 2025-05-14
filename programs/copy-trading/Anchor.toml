@@ -7,6 +7,9 @@ skip-lint = false
 [programs.localnet]
 copy_trading = "8NMw7pjvKbBe3bNRmxtKidth4LcZT8249Eo2LxVbRvt9"
 
+[programs.devnet]
+copy_trading = "8NMw7pjvKbBe3bNRmxtKidth4LcZT8249Eo2LxVbRvt9"
+
 [registry]
 url = "https://api.apr.dev"
 
