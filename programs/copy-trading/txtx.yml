@@ -1,0 +1,19 @@
+---
+name: copy-trading
+id: copy-trading
+runbooks:
+  - name: deployment
+    description: Deploy programs
+    location: runbooks/deployment
+environments:
+  localnet:
+      network_id: localnet
+      rpc_api_url: http://127.0.0.1:8899
+      payer_keypair_json: /home/n3m6/src/turbin3/frzN1hmmYV6vrdfrSY3Rg14mxg63Gnp9zLvr4TouD1g.json
+      authority_keypair_json: /home/n3m6/src/turbin3/frzN1hmmYV6vrdfrSY3Rg14mxg63Gnp9zLvr4TouD1g.json
+  devnet:
+      network_id: devnet
+      rpc_api_url: https://api.devnet.solana.com
+      payer_keypair_json: /home/n3m6/src/turbin3/frzN1hmmYV6vrdfrSY3Rg14mxg63Gnp9zLvr4TouD1g.json
+      authority_keypair_json: /home/n3m6/src/turbin3/frzN1hmmYV6vrdfrSY3Rg14mxg63Gnp9zLvr4TouD1g.json
+
