@@ -1,5 +1,5 @@
 # Monorepo for Archon
-MVP for Riseon SocialFi Project
+MVP for Riseon Copy Trading System
 
 ## Project Structure
 
